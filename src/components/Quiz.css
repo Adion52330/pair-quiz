@@ -18,6 +18,9 @@
   transform: scale(1.06);
   background-color: #d6d6d6a4;
 }
+.header__exit:active {
+  transform: scale(0.9);
+}
 
 .main {
   background-color: #461a42;
@@ -25,7 +28,7 @@
   flex-direction: column;
   flex: 1;
   padding: 20px;
-  border-bottom: 45px solid #090909;
+  border-bottom: 60px solid #090909;
 }
 
 .question {

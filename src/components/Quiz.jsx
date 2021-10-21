@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Quiz.css";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 
@@ -44,14 +44,58 @@ const questions = [
         isCorrect: false,
       },
       {
-        optionText: "Les Go",
+        optionText: "Lets Go",
         isCorrect: false,
+      },
+    ],
+  },
+  {
+    question: "Costliest Mobile Phone in the World",
+    options: [
+      {
+        optionText: "Iphone",
+        isCorrect: true,
+      },
+      {
+        optionText: "Samsung Fold 3",
+        isCorrect: false,
+      },
+      {
+        optionText: "Nokia 4G",
+        isCorrect: false,
+      },
+    ],
+  },
+  {
+    question: "Which is the strongest phone in the world",
+    options: [
+      {
+        optionText: "Samsung M3",
+        isCorrect: false,
+      },
+      {
+        optionText: "Google Pixel",
+        isCorrect: false,
+      },
+      {
+        optionText: "IQOO 4G Redmi",
+        isCorrect: false,
+      },
+      {
+        optionText: "Nokia 3310",
+        isCorrect: true,
       },
     ],
   },
 ];
 
 const Quiz = () => {
+  const [index, setIndex] = useState(0);
+
+  const handleIndex = () => {
+    setIndex(index + 1);
+  };
+
   return (
     <div className="quiz">
       <header className="quiz__header">
@@ -59,11 +103,11 @@ const Quiz = () => {
       </header>
       <div className="main">
         <div className="question">
-          <h1 className="parti">{questions[0].question}</h1>
+          <h1 className="parti">{questions[index].question}</h1>
           <div className="options">
-            {questions[0].options.map((option) => (
-              <div className="option1 option">
-                <h1>{option.optionText}</h1>
+            {questions[index].options.map((option) => (
+              <div onClick={handleIndex} className="option1 option">
+                <h2>{option.optionText}</h2>
               </div>
             ))}
           </div>
