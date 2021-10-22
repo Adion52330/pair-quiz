@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import "./Quiz.css";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import Button from "@mui/material/Button";
+import { styled, Box } from "@mui/system";
+import ModalUnstyled from "@mui/core/ModalUnstyled";
+import { TextField } from "@mui/material";
+import db from "../firebase";
 
 const questions = [
   {
@@ -90,27 +95,135 @@ const questions = [
 ];
 
 const Quiz = () => {
-  const [index, setIndex] = useState(0);
+  // Modal Styling
+  const StyledModal = styled(ModalUnstyled)`
+    position: fixed;
+    z-index: 1300;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  `;
 
-  const handleIndex = () => {
-    setIndex(index + 1);
+  const Backdrop = styled("div")`
+    z-index: -1;
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    -webkit-tap-highlight-color: transparent;
+  `;
+
+  const style = {
+    width: 400,
+    bgcolor: "#34495e",
+    border: "2px solid #000",
+    p: 2,
+    px: 4,
+    pb: 3,
+    color: "white",
+  };
+  const [open, setOpen] = React.useState(false);
+  const handleClose = () => setOpen(false);
+
+  // Hooks related to the project
+  const [index, setIndex] = useState(0);
+  const [completed, setCompleted] = useState(false);
+  const [score, setScore] = useState(0);
+  const [name, setName] = useState("");
+
+  const handleAnswerClick = (isCorrect) => {
+    if (isCorrect) {
+      setScore(score + 1);
+    }
+    const nextQuestion = index + 1;
+    if (nextQuestion < questions.length) {
+      setIndex(nextQuestion);
+    } else {
+      setCompleted(true);
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const data = {
+      name: name,
+      score: score,
+    };
+    db.collection("scores").add(data);
+    setOpen(false);
   };
 
   return (
     <div className="quiz">
+      <StyledModal
+        aria-labelledby="unstyled-modal-title"
+        aria-describedby="unstyled-modal-description"
+        open={open}
+        onClose={handleClose}
+        BackdropComponent={Backdrop}
+      >
+        <Box sx={style}>
+          <center
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <TextField
+              label="Username"
+              variant="outlined"
+              color="error"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <br />
+            <Button variant="contained" color="error" onClick={handleSubmit}>
+              Save
+            </Button>
+          </center>
+        </Box>
+      </StyledModal>
       <header className="quiz__header">
         <ExitToAppIcon className="header__exit" />
       </header>
       <div className="main">
         <div className="question">
-          <h1 className="parti">{questions[index].question}</h1>
-          <div className="options">
-            {questions[index].options.map((option) => (
-              <div onClick={handleIndex} className="option1 option">
-                <h2>{option.optionText}</h2>
+          {completed ? (
+            <>
+              <h1 className="partii">
+                Congratulations, You scored {score} out of {questions.length}
+              </h1>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => setOpen(true)}
+              >
+                Save
+              </Button>
+            </>
+          ) : (
+            <>
+              <h1 className="parti">{questions[index].question}</h1>
+              <div className="options">
+                {questions[index].options.map((option) => (
+                  <div
+                    onClick={() => handleAnswerClick(option.isCorrect)}
+                    className="option1 option"
+                  >
+                    <h2>{option.optionText}</h2>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </>
+          )}
         </div>
       </div>
     </div>

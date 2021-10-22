@@ -73,6 +73,10 @@
 .option:active {
   background-color: #a86d00;
 }
+
+.partii {
+  padding: 20px 0 60px 0;
+}
 /* background for the header and footer = #090909 
     color for the background of the middle part = #461A42
     colors for options: #ECA82C, #2C9CA6, #D4546A, #2F74BD
